@@ -54,6 +54,16 @@ let AuthService = class AuthService {
         const token = this.jwtService.sign({ id: user.id, email: user.email });
         return { token };
     }
+    async updateUserRole(body) {
+        const { email, role } = body;
+        const user = await this.userRepository.findOne({ where: { email } });
+        if (!user) {
+            throw new common_1.UnauthorizedException('User not found');
+        }
+        user.role = role;
+        await this.userRepository.save(user);
+        return { message: 'User role updated successfully' };
+    }
 };
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([

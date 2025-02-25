@@ -27,6 +27,9 @@ let AuthController = class AuthController {
     async login(loginDto) {
         return this.authService.login(loginDto);
     }
+    async updateUserRole(body) {
+        return this.authService.updateUserRole(body);
+    }
 };
 exports.AuthController = AuthController;
 __decorate([
@@ -49,6 +52,16 @@ __decorate([
     __metadata("design:paramtypes", [auth_dto_1.LoginDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Update user role' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'User role updated successfully' }),
+    (0, common_1.Patch)('updateUserRole'),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true })),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [auth_dto_1.UpdateUserRoleDto]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "updateUserRole", null);
 exports.AuthController = AuthController = __decorate([
     (0, swagger_1.ApiTags)('auth'),
     (0, common_1.Controller)('auth'),

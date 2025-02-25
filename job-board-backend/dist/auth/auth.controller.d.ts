@@ -1,5 +1,5 @@
 import { AuthService } from './auth.service';
-import { RegisterDto, LoginDto } from './dto/auth.dto';
+import { RegisterDto, LoginDto, UpdateUserRoleDto } from './dto/auth.dto';
 export declare class AuthController {
     private readonly authService;
     constructor(authService: AuthService);
@@ -8,5 +8,8 @@ export declare class AuthController {
     }>;
     login(loginDto: LoginDto): Promise<{
         token: string;
+    }>;
+    updateUserRole(body: UpdateUserRoleDto): Promise<{
+        message: string;
     }>;
 }

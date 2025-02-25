@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
-import { RegisterDto, LoginDto } from './dto/auth.dto';
+import { RegisterDto, LoginDto, UpdateUserRoleDto } from './dto/auth.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
@@ -58,5 +58,21 @@ export class AuthService {
     const token = this.jwtService.sign({ id: user.id, email: user.email });
 
     return { token };
+  }
+
+  async updateUserRole(body: UpdateUserRoleDto): Promise<{ message: string }> {
+    const { email, role } = body;
+
+    // Find user by email
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    // Update user role
+    user.role = role;
+    await this.userRepository.save(user);
+
+    return { message: 'User role updated successfully' };
   }
 }

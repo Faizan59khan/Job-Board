@@ -36,8 +36,8 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'user', description: 'User role' }),
-    (0, typeorm_1.Column)({ default: 'user' }),
+    (0, swagger_1.ApiProperty)({ example: 'JOBSEEKER', description: 'User role' }),
+    (0, typeorm_1.Column)({ default: '' }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
 __decorate([

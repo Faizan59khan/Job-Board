@@ -1,6 +1,6 @@
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
-import { RegisterDto, LoginDto } from './dto/auth.dto';
+import { RegisterDto, LoginDto, UpdateUserRoleDto } from './dto/auth.dto';
 import { JwtService } from '@nestjs/jwt';
 export declare class AuthService {
     private userRepository;
@@ -11,5 +11,8 @@ export declare class AuthService {
     }>;
     login(loginDto: LoginDto): Promise<{
         token: string;
+    }>;
+    updateUserRole(body: UpdateUserRoleDto): Promise<{
+        message: string;
     }>;
 }
