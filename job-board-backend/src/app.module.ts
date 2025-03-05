@@ -5,6 +5,7 @@ import { JobModule } from './job/job.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { User } from './auth/user.entity';
+import { JobApplicationModule } from './job-application/job-application.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { User } from './auth/user.entity';
     }),
     JobModule,
     AuthModule,
+    JobApplicationModule,
   ],
 })
 export class AppModule {}

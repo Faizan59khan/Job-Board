@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Job = void 0;
 const typeorm_1 = require("typeorm");
 const swagger_1 = require("@nestjs/swagger");
+const job_application_entity_1 = require("../job-application/job-application.entity");
 let Job = class Job {
 };
 exports.Job = Job;
@@ -44,6 +45,11 @@ __decorate([
     (0, typeorm_1.Column)({ default: 'open' }),
     __metadata("design:type", String)
 ], Job.prototype, "status", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: () => job_application_entity_1.JobApplication }),
+    (0, typeorm_1.OneToMany)(() => job_application_entity_1.JobApplication, (jobApplication) => jobApplication.job),
+    __metadata("design:type", Array)
+], Job.prototype, "applications", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)

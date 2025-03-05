@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const typeorm_1 = require("typeorm");
 const swagger_1 = require("@nestjs/swagger");
+const job_application_entity_1 = require("../job-application/job-application.entity");
 let User = class User {
 };
 exports.User = User;
@@ -45,6 +46,11 @@ __decorate([
         example: '2025-02-20T15:28:20.000Z',
         description: 'User creation date',
     }),
+    (0, swagger_1.ApiProperty)({ type: () => job_application_entity_1.JobApplication }),
+    (0, typeorm_1.OneToMany)(() => job_application_entity_1.JobApplication, (application) => application.applicant),
+    __metadata("design:type", Array)
+], User.prototype, "applications", void 0);
+__decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
 ], User.prototype, "createdAt", void 0);
