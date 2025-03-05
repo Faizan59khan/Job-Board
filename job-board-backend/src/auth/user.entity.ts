@@ -21,7 +21,7 @@ export class User {
   @Column()
   password: string;
 
-  @ApiProperty({ example: 'JOBSEEKER', description: 'User role' })
+  @ApiProperty({ example: 'jobseeker', description: 'User role' })
   @Column({ default: '' })
   role: Role;
 

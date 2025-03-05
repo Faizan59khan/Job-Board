@@ -23,7 +23,7 @@ export class JobApplication {
   resume: string;
 
   @ApiProperty({ example: 'applied', description: 'Application status' })
-  @Column({ default: 'pending' })
+  @Column({ default: 'applied' })
   status: JobApplicationStatus;
 
   @ApiProperty({ example: '2025-03-04T10:00:00.000Z', description: 'Date of application' })

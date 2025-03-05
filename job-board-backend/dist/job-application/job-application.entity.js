@@ -39,7 +39,7 @@ __decorate([
 ], JobApplication.prototype, "resume", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: 'applied', description: 'Application status' }),
-    (0, typeorm_1.Column)({ default: 'pending' }),
+    (0, typeorm_1.Column)({ default: 'applied' }),
     __metadata("design:type", String)
 ], JobApplication.prototype, "status", void 0);
 __decorate([
