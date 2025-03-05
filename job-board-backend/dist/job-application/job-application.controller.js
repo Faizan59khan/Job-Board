@@ -20,6 +20,7 @@ const apply_job_dto_1 = require("./dto/apply-job.dto");
 const job_application_entity_1 = require("./job-application.entity");
 const auth_guard_1 = require("../Guards/auth.guard");
 const employer_guard_1 = require("../Guards/employer.guard");
+const jobseeker_guard_1 = require("../Guards/jobseeker.guard");
 let JobApplicationController = class JobApplicationController {
     constructor(jobApplicationService) {
         this.jobApplicationService = jobApplicationService;
@@ -39,7 +40,7 @@ __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Apply for a job' }),
     (0, swagger_1.ApiResponse)({ status: 201, description: 'Job application submitted', type: job_application_entity_1.JobApplication }),
     (0, common_1.Post)(),
-    (0, common_1.UseGuards)(auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(auth_guard_1.JwtAuthGuard, jobseeker_guard_1.Jobseeker),
     (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true })),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),

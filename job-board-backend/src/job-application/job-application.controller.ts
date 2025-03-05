@@ -15,6 +15,7 @@ import { ApplyJobDto, UpdateStatusDto } from './dto/apply-job.dto';
 import { JobApplication } from './job-application.entity';
 import { JwtAuthGuard } from '../Guards/auth.guard';
 import { EmployerGuard } from 'src/Guards/employer.guard';
+import { Jobseeker } from 'src/Guards/jobseeker.guard';
 
 @ApiTags('job-applications')
 @ApiBearerAuth()
@@ -25,7 +26,7 @@ export class JobApplicationController {
   @ApiOperation({ summary: 'Apply for a job' })
   @ApiResponse({ status: 201, description: 'Job application submitted', type: JobApplication })
   @Post()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, Jobseeker)
   @UsePipes(new ValidationPipe({ whitelist: true }))
   applyForJob(@Body() applyJobDto: ApplyJobDto): Promise<JobApplication> {
     return this.jobApplicationService.apply(applyJobDto);

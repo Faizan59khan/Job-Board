@@ -33,7 +33,7 @@ let JobApplicationService = class JobApplicationService {
         const user = await this.userRepo.findOne({ where: { id: userId } });
         if (!user)
             throw new common_1.NotFoundException(`User with ID ${userId} not found`);
-        const application = this.jobAppRepo.create({ job, applicant: user, resume });
+        const application = this.jobAppRepo.create({ job, applicant: user, resume, status: 'applied' });
         return await this.jobAppRepo.save(application);
     }
     async getApplicationsForJob(jobId) {
