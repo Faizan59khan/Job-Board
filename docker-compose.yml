@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./job-board-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - job-board-network
+
+  backend:
+    build:
+      context: ./job-board-backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgres://postgres:87654321@db:5432/job_board
+      - JWT_SECRET=711ec5cd0ddcca6dd34d8757658666f18c6e22f143690be2cc848eda94094c245b0d3f1529a3be30d66068555c818b719a23568ec3791933178855d226cf9663e0f25028f559ca229ade5f73103a4c3e49d177fbab96462798b68f337d19dc55d5f59929f284a8e1725f93f26639fdd2a08ab4595583a40d6ad369df8208720084b6cfd9f8314753c8fd5840f62afd348b318f4bdb2425e4988f8cc6854c4678efeed5a24f250796e891d08785f073893eb97580988524f9b3f50dbf741b3b0f623e54ecaadb84525f42b28458d232fac54eaf1a8b3d55a38d44a9d668d7561a2f76fae42ab1e355c53050c29566f72bee4919e75f28d2c40a986c8062a15240
+    depends_on:
+      - db
+    networks:
+      - job-board-network
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=87654321
+      - POSTGRES_DB=job_board
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - job-board-network
+
+networks:
+  job-board-network:
+    driver: bridge
+
+volumes:
+  postgres_data: 

@@ -19,14 +19,37 @@ const typeorm_2 = require("typeorm");
 const job_application_entity_1 = require("./job-application.entity");
 const job_entity_1 = require("../job/job.entity");
 const user_entity_1 = require("../auth/user.entity");
+const client_s3_1 = require("@aws-sdk/client-s3");
+const s3_request_presigner_1 = require("@aws-sdk/s3-request-presigner");
 let JobApplicationService = class JobApplicationService {
     constructor(jobAppRepo, jobRepo, userRepo) {
         this.jobAppRepo = jobAppRepo;
         this.jobRepo = jobRepo;
         this.userRepo = userRepo;
+        this.s3Client = new client_s3_1.S3Client({
+            region: process.env.AWS_REGION || 'us-east-1',
+            credentials: {
+                accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+            },
+        });
+        this.bucketName = process.env.AWS_S3_BUCKET;
     }
-    async apply(applyJobDto) {
-        const { jobId, userId, resume } = applyJobDto;
+    async generatePresignedUrl(dto) {
+        const s3Key = `resumes/${Date.now()}-${dto.fileName}`;
+        const command = new client_s3_1.PutObjectCommand({
+            Bucket: this.bucketName,
+            Key: s3Key,
+            ContentType: dto.fileType,
+        });
+        const presignedUrl = await (0, s3_request_presigner_1.getSignedUrl)(this.s3Client, command, {
+            expiresIn: 3600,
+            signableHeaders: new Set(['content-type', 'content-length', 'host']),
+        });
+        return { presignedUrl, s3Key };
+    }
+    async apply(applyJobDto, userId) {
+        const { jobId, resume } = applyJobDto;
         const job = await this.jobRepo.findOne({ where: { id: jobId } });
         if (!job)
             throw new common_1.NotFoundException(`Job with ID ${jobId} not found`);

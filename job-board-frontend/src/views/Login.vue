@@ -11,9 +11,10 @@ const errorMsg = ref('');
 const handleLogin = async () => {
   try {
     const response = await login(email.value, password.value);
-    localStorage.setItem('token', response.data.token);
+    localStorage.setItem('token', response.token);
     router.push('/');
   } catch (error) {
+    console.log(error);
     errorMsg.value = 'Invalid credentials';
   }
 };

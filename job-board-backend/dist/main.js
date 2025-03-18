@@ -5,7 +5,14 @@ const app_module_1 = require("./app.module");
 const swagger_1 = require("@nestjs/swagger");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
-    app.enableCors();
+    app.enableCors({
+        origin: true,
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+        allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
+        credentials: true,
+        preflightContinue: false,
+        optionsSuccessStatus: 204,
+    });
     const config = new swagger_1.DocumentBuilder()
         .setTitle('Job API')
         .setDescription('API documentation for Job Management')

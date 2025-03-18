@@ -21,12 +21,17 @@ const job_application_entity_1 = require("./job-application.entity");
 const auth_guard_1 = require("../Guards/auth.guard");
 const employer_guard_1 = require("../Guards/employer.guard");
 const jobseeker_guard_1 = require("../Guards/jobseeker.guard");
+const get_user_decorator_1 = require("../decorators/get-user.decorator");
+const user_entity_1 = require("../auth/user.entity");
 let JobApplicationController = class JobApplicationController {
     constructor(jobApplicationService) {
         this.jobApplicationService = jobApplicationService;
     }
-    applyForJob(applyJobDto) {
-        return this.jobApplicationService.apply(applyJobDto);
+    async getPresignedUrl(dto) {
+        return this.jobApplicationService.generatePresignedUrl(dto);
+    }
+    applyForJob(applyJobDto, user) {
+        return this.jobApplicationService.apply(applyJobDto, user.id);
     }
     getApplications(jobId) {
         return this.jobApplicationService.getApplicationsForJob(jobId);
@@ -37,14 +42,25 @@ let JobApplicationController = class JobApplicationController {
 };
 exports.JobApplicationController = JobApplicationController;
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Get presigned URL for resume upload' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Presigned URL generated successfully' }),
+    (0, common_1.Post)('presigned-url'),
+    (0, common_1.UseGuards)(auth_guard_1.JwtAuthGuard, jobseeker_guard_1.Jobseeker),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [apply_job_dto_1.GetPresignedUrlDto]),
+    __metadata("design:returntype", Promise)
+], JobApplicationController.prototype, "getPresignedUrl", null);
+__decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Apply for a job' }),
     (0, swagger_1.ApiResponse)({ status: 201, description: 'Job application submitted', type: job_application_entity_1.JobApplication }),
     (0, common_1.Post)(),
     (0, common_1.UseGuards)(auth_guard_1.JwtAuthGuard, jobseeker_guard_1.Jobseeker),
     (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true })),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, get_user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [apply_job_dto_1.ApplyJobDto]),
+    __metadata("design:paramtypes", [apply_job_dto_1.ApplyJobDto, user_entity_1.User]),
     __metadata("design:returntype", Promise)
 ], JobApplicationController.prototype, "applyForJob", null);
 __decorate([
