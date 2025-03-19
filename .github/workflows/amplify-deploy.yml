@@ -4,7 +4,7 @@ on:
     branches:
       - main
     paths:
-      - 'job-board-frontend/**'
+      - "job-board-frontend/**"
 
 jobs:
   deploy:
@@ -15,9 +15,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: "18"
+          cache: "npm"
           cache-dependency-path: job-board-frontend/package-lock.json
+
+      - name: Install @tailwindcss/vite
+        working-directory: ./job-board-frontend
+        run: npm install @tailwindcss/vite --save-dev
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -31,4 +35,4 @@ jobs:
         run: |
           npm ci
           npm run build
-          aws amplify start-job --app-id ${{ secrets.AMPLIFY_APP_ID }} --branch-name main --job-type RELEASE 
+          aws amplify start-job --app-id ${{ secrets.AMPLIFY_APP_ID }} --branch-name main --job-type RELEASE
