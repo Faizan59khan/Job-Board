@@ -37,7 +37,18 @@ jobs:
         working-directory: ./job-board-frontend
         run: npm run build
 
+      - name: Check Amplify Job Status
+        id: check_job_status
+        run: |
+          JOB_STATUS=$(aws amplify list-jobs --app-id ${{ secrets.AMPLIFY_APP_ID }} --branch-name main --query "jobSummaries[0].status" --output text)
+          echo "Current Amplify Job Status: $JOB_STATUS"
+          if [[ "$JOB_STATUS" == "PENDING" || "$JOB_STATUS" == "RUNNING" ]]; then
+            echo "There are already pending or running jobs on the branch. Skipping job start."
+            exit 0
+          fi
+
       - name: Start Amplify Deployment
+        if: steps.check_job_status.outputs.job_status != 'PENDING' && steps.check_job_status.outputs.job_status != 'RUNNING'
         run: |
           aws amplify start-job --app-id ${{ secrets.AMPLIFY_APP_ID }} --branch-name main --job-type RELEASE
 
