@@ -9,6 +9,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 30 # Increase timeout to allow deployment completion
     steps:
       - uses: actions/checkout@v3
 
@@ -32,8 +33,26 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
-      - name: Deploy to Amplify
+      - name: Build Frontend
         working-directory: ./job-board-frontend
+        run: npm run build
+
+      - name: Start Amplify Deployment
         run: |
-          npm run build
           aws amplify start-job --app-id ${{ secrets.AMPLIFY_APP_ID }} --branch-name main --job-type RELEASE
+
+      - name: Wait for Amplify Deployment to Complete
+        run: |
+          echo "Waiting for Amplify deployment to complete..."
+          while true; do
+            JOB_STATUS=$(aws amplify list-jobs --app-id ${{ secrets.AMPLIFY_APP_ID }} --branch-name main --query "jobSummaries[0].status" --output text)
+            echo "Current Amplify Job Status: $JOB_STATUS"
+            if [[ "$JOB_STATUS" == "SUCCEED" ]]; then
+              echo "Amplify deployment successful!"
+              exit 0
+            elif [[ "$JOB_STATUS" == "FAILED" || "$JOB_STATUS" == "CANCELLED" ]]; then
+              echo "Amplify deployment failed!"
+              exit 1
+            fi
+            sleep 30
+          done
