@@ -24,8 +24,17 @@ let JobService = class JobService {
     findAll() {
         return this.jobRepository.find();
     }
-    async create(jobData) {
-        const newJob = this.jobRepository.create(jobData);
+    async findByEmployer(employerId) {
+        return this.jobRepository.find({
+            where: { postedBy: { id: employerId } },
+            relations: ['postedBy'],
+        });
+    }
+    async create(jobData, employerId) {
+        const newJob = this.jobRepository.create({
+            ...jobData,
+            postedBy: { id: employerId },
+        });
         return await this.jobRepository.save(newJob);
     }
 };

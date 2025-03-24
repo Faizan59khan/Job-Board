@@ -19,6 +19,8 @@ const job_service_1 = require("./job.service");
 const job_entity_1 = require("./job.entity");
 const create_job_dto_1 = require("./dto/create-job.dto");
 const auth_guard_1 = require("../Guards/auth.guard");
+const user_entity_1 = require("../auth/user.entity");
+const get_user_decorator_1 = require("../decorators/get-user.decorator");
 let JobController = class JobController {
     constructor(jobService) {
         this.jobService = jobService;
@@ -26,8 +28,11 @@ let JobController = class JobController {
     getAllJobs() {
         return this.jobService.findAll();
     }
-    createJob(jobData) {
-        return this.jobService.create(jobData);
+    getEmployerJobs(user) {
+        return this.jobService.findByEmployer(user.id);
+    }
+    createJob(jobData, user) {
+        return this.jobService.create(jobData, user.id);
     }
 };
 exports.JobController = JobController;
@@ -41,13 +46,23 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], JobController.prototype, "getAllJobs", null);
 __decorate([
+    (0, common_1.Get)('employer'),
+    (0, common_1.UseGuards)(auth_guard_1.JwtAuthGuard),
+    __param(0, (0, get_user_decorator_1.GetUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [user_entity_1.User]),
+    __metadata("design:returntype", Promise)
+], JobController.prototype, "getEmployerJobs", null);
+__decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Create a new job' }),
     (0, swagger_1.ApiResponse)({ status: 201, description: 'Job created', type: job_entity_1.Job }),
     (0, common_1.Post)(),
+    (0, common_1.UseGuards)(auth_guard_1.JwtAuthGuard),
     (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true })),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, get_user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_job_dto_1.CreateJobDto]),
+    __metadata("design:paramtypes", [create_job_dto_1.CreateJobDto, user_entity_1.User]),
     __metadata("design:returntype", Promise)
 ], JobController.prototype, "createJob", null);
 exports.JobController = JobController = __decorate([

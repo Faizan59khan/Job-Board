@@ -7,6 +7,7 @@ import { Job } from '../job/job.entity';
 import { User } from 'src/auth/user.entity';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import * as admin from 'firebase-admin';
 
 @Injectable()
 export class JobApplicationService {
@@ -18,6 +19,12 @@ export class JobApplicationService {
     @InjectRepository(Job) private jobRepo: Repository<Job>,
     @InjectRepository(User) private userRepo: Repository<User>,
   ) {
+    // Initialize Firebase Admin
+    if (!admin.apps.length) {
+      admin.initializeApp({
+        credential: admin.credential.applicationDefault(),
+      });
+    }
     this.s3Client = new S3Client({
       region: process.env.AWS_REGION || 'us-east-1',
       credentials: {
@@ -53,7 +60,30 @@ export class JobApplicationService {
     if (!user) throw new NotFoundException(`User with ID ${userId} not found`);
 
     const application = this.jobAppRepo.create({ job, applicant: user, resume, status: 'applied' });
-    return await this.jobAppRepo.save(application);
+    const savedApplication = await this.jobAppRepo.save(application);
+
+    // Get employer's FCM token
+    const jobWithEmployer = await this.jobRepo.findOne({
+      where: { id: jobId },
+      relations: ['postedBy'],
+    });
+    if (jobWithEmployer?.postedBy?.fcmToken) {
+      const message = {
+        notification: {
+          title: 'New Job Application',
+          body: `${user.username} has applied to your job "${job.title}"`,
+        },
+        token: jobWithEmployer.postedBy.fcmToken,
+      };
+
+      try {
+        await admin.messaging().send(message);
+      } catch (error) {
+        console.error('Error sending notification:', error);
+      }
+    }
+
+    return savedApplication;
   }
 
   async getApplicationsForJob(jobId: number): Promise<JobApplication[]> {

@@ -16,10 +16,14 @@ exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const auth_dto_1 = require("./dto/auth.dto");
+const save_token_dto_1 = require("./dto/save-token.dto");
 const swagger_1 = require("@nestjs/swagger");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
+    }
+    async saveToken(saveTokenDto) {
+        return this.authService.saveToken(saveTokenDto);
     }
     async register(registerDto) {
         return this.authService.register(registerDto);
@@ -32,6 +36,16 @@ let AuthController = class AuthController {
     }
 };
 exports.AuthController = AuthController;
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Save FCM token for push notifications' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'FCM token saved successfully' }),
+    (0, common_1.Post)('save-token'),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true })),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [save_token_dto_1.SaveTokenDto]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "saveToken", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Register a new user' }),
     (0, swagger_1.ApiResponse)({ status: 201, description: 'User registered successfully' }),

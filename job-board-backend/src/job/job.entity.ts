@@ -1,9 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  OneToMany,
+  ManyToOne,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { JobApplication } from 'src/job-application/job-application.entity';
+import { User } from 'src/auth/user.entity';
 
 @Entity()
 export class Job {
+  @ManyToOne(() => User, (user) => user.jobs)
+  postedBy: User;
   @PrimaryGeneratedColumn()
   id: number;
 
