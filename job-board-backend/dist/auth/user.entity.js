@@ -13,6 +13,7 @@ exports.User = void 0;
 const typeorm_1 = require("typeorm");
 const swagger_1 = require("@nestjs/swagger");
 const job_application_entity_1 = require("../job-application/job-application.entity");
+const job_entity_1 = require("../job/job.entity");
 let User = class User {
 };
 exports.User = User;
@@ -51,9 +52,18 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "applications", void 0);
 __decorate([
+    (0, typeorm_1.OneToMany)(() => job_entity_1.Job, (job) => job.postedBy),
+    __metadata("design:type", Array)
+], User.prototype, "jobs", void 0);
+__decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
 ], User.prototype, "createdAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'fcm_token', description: 'FCM token for push notifications' }),
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], User.prototype, "fcmToken", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)()
 ], User);

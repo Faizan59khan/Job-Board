@@ -16,8 +16,18 @@ export class JobService {
     return this.jobRepository.find();
   }
 
-  async create(jobData: CreateJobDto): Promise<Job> {
-    const newJob = this.jobRepository.create(jobData); // Uses TypeORM's create method
+  async findByEmployer(employerId: number): Promise<Job[]> {
+    return this.jobRepository.find({
+      where: { postedBy: { id: employerId } },
+      relations: ['postedBy'],
+    });
+  }
+
+  async create(jobData: CreateJobDto, employerId: number): Promise<Job> {
+    const newJob = this.jobRepository.create({
+      ...jobData,
+      postedBy: { id: employerId },
+    });
     return await this.jobRepository.save(newJob);
   }
 }

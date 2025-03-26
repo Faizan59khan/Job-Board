@@ -13,9 +13,14 @@ exports.Job = void 0;
 const typeorm_1 = require("typeorm");
 const swagger_1 = require("@nestjs/swagger");
 const job_application_entity_1 = require("../job-application/job-application.entity");
+const user_entity_1 = require("../auth/user.entity");
 let Job = class Job {
 };
 exports.Job = Job;
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => user_entity_1.User, (user) => user.jobs),
+    __metadata("design:type", user_entity_1.User)
+], Job.prototype, "postedBy", void 0);
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)

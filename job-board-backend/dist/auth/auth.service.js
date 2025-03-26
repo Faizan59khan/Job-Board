@@ -24,6 +24,15 @@ let AuthService = class AuthService {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
     }
+    async saveToken(saveTokenDto) {
+        const user = await this.userRepository.findOne({ where: { email: saveTokenDto.email } });
+        if (!user) {
+            throw new common_1.UnauthorizedException('User not found');
+        }
+        user.fcmToken = saveTokenDto.fcmToken;
+        await this.userRepository.save(user);
+        return { message: 'FCM token saved successfully' };
+    }
     async register(registerDto) {
         const { username, email, password } = registerDto;
         const existingUser = await this.userRepository.findOne({

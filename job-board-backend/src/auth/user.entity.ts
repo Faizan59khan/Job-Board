@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } f
 import { ApiProperty } from '@nestjs/swagger';
 import { Role } from 'src/utils/helper';
 import { JobApplication } from 'src/job-application/job-application.entity';
+import { Job } from 'src/job/job.entity';
 
 @Entity()
 export class User {
@@ -34,6 +35,13 @@ export class User {
   @OneToMany(() => JobApplication, (application) => application.applicant)
   applications: JobApplication[];
 
+  @OneToMany(() => Job, (job) => job.postedBy)
+  jobs: Job[];
+
   @CreateDateColumn()
   createdAt: Date;
+
+  @ApiProperty({ example: 'fcm_token', description: 'FCM token for push notifications' })
+  @Column({ nullable: true })
+  fcmToken: string;
 }

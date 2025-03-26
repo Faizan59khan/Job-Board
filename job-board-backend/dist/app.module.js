@@ -15,6 +15,7 @@ const auth_module_1 = require("./auth/auth.module");
 const jwt_1 = require("@nestjs/jwt");
 const user_entity_1 = require("./auth/user.entity");
 const job_application_module_1 = require("./job-application/job-application.module");
+const firebase_module_1 = require("./firebase/firebase.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -36,6 +37,7 @@ exports.AppModule = AppModule = __decorate([
             job_module_1.JobModule,
             auth_module_1.AuthModule,
             job_application_module_1.JobApplicationModule,
+            firebase_module_1.FirebaseModule,
         ],
     })
 ], AppModule);

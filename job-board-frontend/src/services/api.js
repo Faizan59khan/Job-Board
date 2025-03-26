@@ -143,3 +143,9 @@ export const submitJobApplication = (jobId, s3Key) =>
     data: { jobId, resume: s3Key },
     useAuth: true,
   });
+
+export const getEmployerJobs = () =>
+  makeRequest({
+    endpoint: '/job/employer',
+    useAuth: true,
+  });

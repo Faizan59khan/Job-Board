@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { login } from '../services/api';
 import { useRouter } from 'vue-router';
+import { requestForToken } from '../firebase';
 
 const router = useRouter();
 const email = ref('');
@@ -12,6 +13,10 @@ const handleLogin = async () => {
   try {
     const response = await login(email.value, password.value);
     localStorage.setItem('token', response.token);
+    
+    // Request and send FCM token
+    await requestForToken(email.value);
+    
     router.push('/');
   } catch (error) {
     console.log(error);

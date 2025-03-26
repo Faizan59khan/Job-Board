@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { RegisterDto, LoginDto, UpdateUserRoleDto } from './dto/auth.dto';
+import { SaveTokenDto } from './dto/save-token.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
@@ -13,6 +14,17 @@ export class AuthService {
     private userRepository: Repository<User>,
     private jwtService: JwtService,
   ) {}
+
+  async saveToken(saveTokenDto: SaveTokenDto) {
+    const user = await this.userRepository.findOne({ where: { email: saveTokenDto.email } });
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    user.fcmToken = saveTokenDto.fcmToken;
+    await this.userRepository.save(user);
+    return { message: 'FCM token saved successfully' };
+  }
 
   async register(registerDto: RegisterDto): Promise<{ message: string }> {
     const { username, email, password } = registerDto;

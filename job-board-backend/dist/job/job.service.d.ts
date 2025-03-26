@@ -5,5 +5,6 @@ export declare class JobService {
     private jobRepository;
     constructor(jobRepository: Repository<Job>);
     findAll(): Promise<Job[]>;
-    create(jobData: CreateJobDto): Promise<Job>;
+    findByEmployer(employerId: number): Promise<Job[]>;
+    create(jobData: CreateJobDto, employerId: number): Promise<Job>;
 }
