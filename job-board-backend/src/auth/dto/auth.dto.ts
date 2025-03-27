@@ -32,7 +32,7 @@ export class UpdateUserRoleDto {
   @IsEmail()
   email: string;
 
-  @ApiProperty({ example: 'JOBSEEKER', description: 'Role' })
+  @ApiProperty({ example: 'jobseeker', description: 'Role' })
   @IsString()
   role: Role;
 }

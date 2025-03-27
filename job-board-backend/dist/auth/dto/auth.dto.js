@@ -54,7 +54,7 @@ __decorate([
     __metadata("design:type", String)
 ], UpdateUserRoleDto.prototype, "email", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'JOBSEEKER', description: 'Role' }),
+    (0, swagger_1.ApiProperty)({ example: 'jobseeker', description: 'Role' }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], UpdateUserRoleDto.prototype, "role", void 0);
